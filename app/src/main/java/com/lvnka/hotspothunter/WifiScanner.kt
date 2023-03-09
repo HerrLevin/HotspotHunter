@@ -44,6 +44,7 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
 
     override fun onReceive(p0: Context?, p1: Intent?) {
         checkWifiPermission()
+        resultText.clear()
         this.resultList = this.wifiManager.scanResults as ArrayList<ScanResult>
         for (result in resultList) {
             this.resultText.add("${result.SSID} -- ${result.BSSID} -- Level: ${result.level}")
@@ -86,7 +87,7 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
         }
     }
 
-    fun getLocation() {
+    private fun getLocation() {
         if (checkWifiPermission()) {
             Log.d("LOCATION", "fetch location")
             this.locationManager.requestLocationUpdates(
@@ -112,6 +113,7 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
 
     fun stopScanning() {
         this.isScanning = false
+        this.locationManager.removeUpdates(locationListener)
         val axisList = ArrayList<String>()
         for (result in this.resultList) {
             axisList.add(result.BSSID.toString())

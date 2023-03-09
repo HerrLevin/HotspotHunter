@@ -2,7 +2,7 @@
     <string name="app_name">HotspotHunter</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
+    <string name="first_fragment_label">HotspotHunter</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="scan">Scan!</string>
     <string name="scan_stop">Stop scanning</string>
