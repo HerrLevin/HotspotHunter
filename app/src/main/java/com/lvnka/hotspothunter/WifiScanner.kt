@@ -20,9 +20,10 @@ import androidx.core.app.ActivityCompat
 class WifiScanner(activity: Activity) : BroadcastReceiver() {
 
     private var resultList = ArrayList<ScanResult>()
+    var resultText = mutableListOf<String>()
     private lateinit var wifiManager: WifiManager
     private var locationManager: LocationManager
-    private lateinit var location: String
+    var location: String = ""
     private var activity: Activity
     val requestLocationPermission = 1
     val requestWifiPermission = 1
@@ -44,6 +45,9 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
         checkWifiPermission()
         this.resultList = this.wifiManager.scanResults as ArrayList<ScanResult>
+        for (result in resultList) {
+            this.resultText.add("${result.SSID} -- ${result.BSSID} -- Level: ${result.level}")
+        }
         Log.d("TESTING", "onReceive called!")
     }
 

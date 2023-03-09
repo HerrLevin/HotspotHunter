@@ -21,7 +21,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="300dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/wifiscan"
         android:textSize="20sp"
