@@ -1,5 +1,6 @@
 package com.lvnka.hotspothunter
 
+import android.annotation.SuppressLint
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import com.lvnka.hotspothunter.databinding.FragmentFirstBinding
 
 /**
@@ -64,10 +66,22 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFirst.setOnClickListener {
+        val tutorials = listOf<String>("Algorithms", "Data Structures",
+            "Languages", "Interview Corner",
+            "GATE", "ISRO CS",
+            "UGC NET CS", "CS Subjects",
+            "Web Technologies")
+
+        var adapter: ArrayAdapter<String> = ArrayAdapter<String>(activity!!.applicationContext, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, tutorials)
+
+        binding.wifiList.adapter = adapter
+
+        binding.buttonScan.setOnClickListener {
             if (!this.wifiScanner.isScanning()) {
+                binding.buttonScan.text = resources.getString(R.string.scan)
                 this.wifiScanner.startScanning()
             } else {
+                binding.buttonScan.text = resources.getString(R.string.scan_stop)
                 this.wifiScanner.stopScanning()
             }
 //            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
