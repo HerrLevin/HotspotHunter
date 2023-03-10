@@ -1,0 +1,22 @@
+<resources>
+    <!-- Interval Preference -->
+    <string-array name="interval_entries">
+        <item>1s</item>
+        <item>5s</item>
+        <item>10s</item>
+        <item>30s</item>
+        <item>1m</item>
+        <item>5m</item>
+        <item>10m</item>
+    </string-array>
+
+    <string-array name="interval_values">
+        <item>1_000</item>
+        <item>5_000</item>
+        <item>10_000</item>
+        <item>30_000</item>
+        <item>60_000</item>
+        <item>300_000</item>
+        <item>600_000</item>
+    </string-array>
+</resources>
