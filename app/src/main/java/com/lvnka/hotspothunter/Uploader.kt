@@ -37,7 +37,7 @@ class Uploader(activity: Activity) {
 
         val queue = Volley.newRequestQueue(activity.applicationContext)
         val wifiArray = JSONArray()
-        val dateTime = SimpleDateFormat("yyyy-M-dd hh:mm:ss")
+        val dateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         for (wifi in wifiResults) {
             val wifiElement = JSONObject()
             wifiElement.put("bssid", wifi.BSSID)
