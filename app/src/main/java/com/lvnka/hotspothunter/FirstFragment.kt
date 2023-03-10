@@ -94,17 +94,6 @@ class FirstFragment : Fragment() {
             this.wifiScanner.stopScanning()
             updateButton()
         }
-
-        binding.vehicleName.setOnEditorActionListener { _, keyCode, keyEvent ->
-            Log.d("KEY", keyCode.toString())
-            when {
-                ((keyCode == KeyEvent.KEYCODE_ENTER) && keyEvent.action == KeyEvent.ACTION_DOWN) -> {
-                    binding.vehicleName.clearFocus()
-                    return@setOnEditorActionListener true
-                }
-                else -> false
-            }
-        }
     }
 
     private fun updateButton() {
