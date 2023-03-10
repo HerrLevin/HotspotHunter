@@ -12,10 +12,12 @@ import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.snackbar.Snackbar
 import org.json.JSONObject
 import java.nio.charset.Charset
 
 class Uploader(activity: Activity) {
+    private val activity = activity
     private val queue = Volley.newRequestQueue(activity.applicationContext)
     private lateinit var url: String
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
@@ -35,12 +37,18 @@ class Uploader(activity: Activity) {
 
         val stringRequest = object : StringRequest(
             Method.POST,
-            url,
+            this.url,
             Response.Listener { response ->
                 Log.i("LOG_VOLLEY", response)
             },
             Response.ErrorListener { error ->
                 Log.e("LOG_VOLLEY", error.toString())
+
+                Snackbar.make(
+                    activity.window.decorView.rootView,
+                    "Could not connect to ${this.url}",
+                    Snackbar.LENGTH_SHORT
+                ).setAction("Action", null).show()
             }
         ) {
             override fun getBodyContentType(): String {
