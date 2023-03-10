@@ -27,6 +27,8 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
     private lateinit var wifiManager: WifiManager
     private var locationManager: LocationManager
     var location: String = ""
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
     private var activity: Activity
     val requestLocationPermission = 1
     val requestWifiPermission = 1
@@ -135,6 +137,8 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
     private var locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             this@WifiScanner.location = "${location.longitude}:${location.latitude}"
+            this@WifiScanner.latitude = location.latitude
+            this@WifiScanner.longitude = location.longitude
             Log.d("LOCATION", this@WifiScanner.location)
         }
 
@@ -147,7 +151,7 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
     private fun stopWithoutBreaking() {
         Log.d("WifiScanner", "Stopping scan run")
         val uploader = Uploader(this.activity)
-        uploader.upload(this.resultList)
+        uploader.upload(this.resultList, this.latitude, this.longitude)
 
         for (result in this.resultList) {
             Log.d("WIFI", result.BSSID.toString())

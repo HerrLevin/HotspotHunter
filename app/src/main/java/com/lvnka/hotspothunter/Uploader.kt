@@ -3,6 +3,7 @@ package com.lvnka.hotspothunter
 import android.app.Activity
 import android.content.SharedPreferences
 import android.icu.text.SimpleDateFormat
+import android.location.Location
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import android.util.Log
@@ -29,7 +30,7 @@ class Uploader(activity: Activity) {
         url = "https://$url/api/v1/scan"
     }
 
-    fun upload(wifiResults: ArrayList<ScanResult>) {
+    fun upload(wifiResults: ArrayList<ScanResult>, latitude: Double, longitude: Double) {
         if (!prefs.getBoolean("upload", false) && wifiResults.isNotEmpty()) {
             return
         }
@@ -47,6 +48,10 @@ class Uploader(activity: Activity) {
             wifiElement.put("frequency", wifi.frequency)
             wifiElement.put("encrypted", wifi.capabilities.length > 5)
             wifiElement.put("channel", wifi.channelWidth)
+            if (latitude != 0.0 && longitude != 0.0) {
+                wifiElement.put("latitude", latitude)
+                wifiElement.put("longitude", longitude)
+            }
             wifiElement.put("created_at", dateTime.format(Date()))
 
             wifiArray.put(wifiElement)
