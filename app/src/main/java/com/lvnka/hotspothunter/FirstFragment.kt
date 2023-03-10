@@ -6,6 +6,8 @@ import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -82,24 +84,36 @@ class FirstFragment : Fragment() {
         })
 
 
-        binding.buttonScan.setOnClickListener {
-            if (!this.wifiScanner.isScanning()) {
-                this.wifiScanner.prepareScanning(binding.vehicleName.text.toString())
-                Snackbar.make(view, "Starting Wifi Scan!", Snackbar.LENGTH_SHORT)
-                    .setAction("Action", null).show()
-            } else {
-                this.wifiScanner.stopScanning()
-            }
+        binding.floatScan.setOnClickListener{
+            this.wifiScanner.prepareScanning(binding.vehicleName.text.toString())
+            Snackbar.make(view, "Starting Wifi Scan!", Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show()
             updateButton()
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        }
+        binding.floatScanStop.setOnClickListener {
+            this.wifiScanner.stopScanning()
+            updateButton()
+        }
+
+        binding.vehicleName.setOnEditorActionListener { _, keyCode, keyEvent ->
+            Log.d("KEY", keyCode.toString())
+            when {
+                ((keyCode == KeyEvent.KEYCODE_ENTER) && keyEvent.action == KeyEvent.ACTION_DOWN) -> {
+                    binding.vehicleName.clearFocus()
+                    return@setOnEditorActionListener true
+                }
+                else -> false
+            }
         }
     }
 
     private fun updateButton() {
         if (this.wifiScanner.isScanning()) {
-            binding.buttonScan.text = resources.getString(R.string.scan_stop)
+            binding.floatScan.visibility = View.GONE
+            binding.floatScanStop.visibility = View.VISIBLE
         } else {
-            binding.buttonScan.text = resources.getString(R.string.scan)
+            binding.floatScan.visibility = View.VISIBLE
+            binding.floatScanStop.visibility = View.GONE
         }
     }
 
