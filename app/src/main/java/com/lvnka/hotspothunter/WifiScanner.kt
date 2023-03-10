@@ -101,7 +101,8 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
 
     private fun syncPrefs() {
         this.sync = prefs.getBoolean("sync", false)
-        this.interval = prefs.getInt("interval", 5000)
+        this.interval = prefs.getString("interval", "5000").toString().toInt()
+
     }
 
     fun prepareScanning() {
@@ -109,6 +110,7 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
             mainHandler.post(object : Runnable {
                 override fun run() {
                     Log.d("WifiScanner", "Starting interval scan")
+                    Log.d("WifiScanner", "Time in ms: ${this@WifiScanner.interval.toLong()}")
                     startScanning()
                     mainHandler.postDelayed(this, this@WifiScanner.interval.toLong())
                 }

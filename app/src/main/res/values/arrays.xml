@@ -10,11 +10,11 @@
     </string-array>
 
     <string-array name="interval_values">
-        <item>5_000</item>
-        <item>10_000</item>
-        <item>30_000</item>
-        <item>60_000</item>
-        <item>300_000</item>
-        <item>600_000</item>
+        <item>5000</item>
+        <item>10000</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>300000</item>
+        <item>600000</item>
     </string-array>
 </resources>

@@ -32,11 +32,11 @@
             app:key="sync"
             app:title="@string/sync_title" />
         <ListPreference
-            app:defaultValue="10_000"
+            app:defaultValue="10000"
             app:dependency="sync"
             app:entries="@array/interval_entries"
             app:entryValues="@array/interval_values"
-            app:key="10_000"
+            app:key="interval"
             app:title="@string/sync_interval"
             app:useSimpleSummaryProvider="true" />
 
