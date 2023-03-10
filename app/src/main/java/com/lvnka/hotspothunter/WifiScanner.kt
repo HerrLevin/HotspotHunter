@@ -144,6 +144,8 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
 
     private fun stopWithoutBreaking() {
         Log.d("WifiScanner", "Stopping scan run")
+        val uploader = Uploader(this.activity)
+        uploader.upload(this.resultList)
 
         for (result in this.resultList) {
             Log.d("WIFI", result.BSSID.toString())

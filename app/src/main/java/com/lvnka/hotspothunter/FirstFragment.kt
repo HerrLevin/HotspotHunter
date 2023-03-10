@@ -22,11 +22,13 @@ class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
     private lateinit var wifiScanner: WifiScanner
+    private lateinit var uploader: Uploader
 
 
     override fun onStart() {
         super.onStart()
         this.wifiScanner = WifiScanner(activity!!)
+        this.uploader = Uploader(activity!!)
         requireActivity().registerReceiver(this.wifiScanner, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
     }
 

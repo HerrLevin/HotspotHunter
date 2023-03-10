@@ -2,23 +2,25 @@ package com.lvnka.hotspothunter
 
 import android.app.Activity
 import android.content.SharedPreferences
+import android.icu.text.SimpleDateFormat
+import android.net.wifi.ScanResult
+import android.net.wifi.WifiManager
 import android.util.Log
 import androidx.preference.PreferenceManager
 import com.android.volley.NetworkResponse
-import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.VolleyLog
 import com.android.volley.toolbox.HttpHeaderParser
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.snackbar.Snackbar
+import org.json.JSONArray
 import org.json.JSONObject
 import java.nio.charset.Charset
+import java.util.*
+import kotlin.collections.ArrayList
 
 class Uploader(activity: Activity) {
     private val activity = activity
-    private val queue = Volley.newRequestQueue(activity.applicationContext)
     private lateinit var url: String
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
 
@@ -27,12 +29,30 @@ class Uploader(activity: Activity) {
         url = "https://$url/api/v1/scan"
     }
 
-    fun test() {
-        //val test = queue.add(stringRequest)
-        var jsonBody = JSONObject()
-        jsonBody.put("firstKey", "firstValue")
-        jsonBody.put("secondKey", "secondValue")
-        val requestBody = jsonBody.toString()
+    fun upload(wifiResults: ArrayList<ScanResult>) {
+        if (!prefs.getBoolean("upload", false) && wifiResults.isNotEmpty()) {
+            return
+        }
+        Log.d("UPLOADER", "Trying to upload")
+
+        val queue = Volley.newRequestQueue(activity.applicationContext)
+        val wifiArray = JSONArray()
+        val dateTime = SimpleDateFormat("yyyy-M-dd hh:mm:ss")
+        for (wifi in wifiResults) {
+            val wifiElement = JSONObject()
+            wifiElement.put("bssid", wifi.BSSID)
+            wifiElement.put("ssid", wifi.SSID)
+            wifiElement.put("signal", wifi.level)
+            wifiElement.put("quality", WifiManager.calculateSignalLevel(wifi.level, 100).toString() + "/100")
+            wifiElement.put("frequency", wifi.frequency)
+            wifiElement.put("encrypted", wifi.capabilities.length > 5)
+            wifiElement.put("channel", wifi.channelWidth)
+            wifiElement.put("created_at", dateTime.format(Date()))
+
+            wifiArray.put(wifiElement)
+        }
+
+        val requestBody = wifiArray.toString()
         this.prepareUrl()
 
         val stringRequest = object : StringRequest(
