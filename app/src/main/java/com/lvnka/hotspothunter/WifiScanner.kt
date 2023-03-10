@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -14,8 +15,10 @@ import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import androidx.preference.PreferenceManager
 
 class WifiScanner(activity: Activity) : BroadcastReceiver() {
 
@@ -27,6 +30,10 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
     private var activity: Activity
     val requestLocationPermission = 1
     val requestWifiPermission = 1
+    val mainHandler = Handler(Looper.getMainLooper())
+    private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
+    private var sync: Boolean = false
+    private var interval: Int = 5000
     private var isScanning: Boolean = false
 
     init {
@@ -36,6 +43,7 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
             Log.d("TESTING", " wifiManager created")
         }
         this.locationManager = this.activity.applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
+        this.syncPrefs()
     }
 
     fun isScanning(): Boolean {
@@ -70,20 +78,43 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
             ActivityCompat.requestPermissions(this.activity, arrayOf(Manifest.permission.CHANGE_WIFI_STATE), this.requestWifiPermission)
             return false
         }
-        Log.d("TESTING", "Permissions have been granted!")
+        Log.d("WifiScanner", "Permissions have been granted!")
         return true
     }
 
-    fun startScanning() {
+    private fun startScanning() {
         this.getLocation()
         if (checkWifiPermission()) {
             this.isScanning = true
-            Log.d("TESTING", "starting scanning?")
+            Log.d("WifiScanner", "Starting scan")
             wifiManager.startScan()
 
             Handler().postDelayed({
-                stopScanning()
-            }, 10000)
+                if (this.sync) {
+                    stopWithoutBreaking()
+                } else {
+                    stopScanning()
+                }
+            }, if (this.interval > 5000) 9000 else 3000)
+        }
+    }
+
+    private fun syncPrefs() {
+        this.sync = prefs.getBoolean("sync", false)
+        this.interval = prefs.getInt("interval", 5000)
+    }
+
+    fun prepareScanning() {
+        if (this.sync) {
+            mainHandler.post(object : Runnable {
+                override fun run() {
+                    Log.d("WifiScanner", "Starting interval scan")
+                    startScanning()
+                    mainHandler.postDelayed(this, this@WifiScanner.interval.toLong())
+                }
+            })
+        } else {
+            startScanning()
         }
     }
 
@@ -111,14 +142,18 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
         override fun onProviderDisabled(provider: String) {}
     }
 
+    private fun stopWithoutBreaking() {
+        Log.d("WifiScanner", "Stopping scan run")
+
+        for (result in this.resultList) {
+            Log.d("WIFI", result.BSSID.toString())
+        }
+    }
+
     fun stopScanning() {
+        this.mainHandler.removeCallbacksAndMessages(null)
         this.isScanning = false
         this.locationManager.removeUpdates(locationListener)
-        val axisList = ArrayList<String>()
-        for (result in this.resultList) {
-            axisList.add(result.BSSID.toString())
-            //axisList.add(result.BSSID.toString(), result.level.toString())
-        }
-        Log.d("TESTING", axisList.toString())
+        this.stopWithoutBreaking()
     }
 }
