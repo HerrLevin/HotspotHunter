@@ -30,7 +30,7 @@ class Uploader(activity: Activity) {
         url = "https://$url/api/v1/scan"
     }
 
-    fun upload(wifiResults: ArrayList<ScanResult>, latitude: Double, longitude: Double) {
+    fun upload(wifiResults: ArrayList<ScanResult>, latitude: Double, longitude: Double, vehicleName: String) {
         if (!prefs.getBoolean("upload", false) && wifiResults.isNotEmpty()) {
             return
         }
@@ -51,6 +51,9 @@ class Uploader(activity: Activity) {
             if (latitude != 0.0 && longitude != 0.0) {
                 wifiElement.put("latitude", latitude)
                 wifiElement.put("longitude", longitude)
+            }
+            if (vehicleName.isNotEmpty()) {
+                wifiElement.put("vehicle_name", vehicleName)
             }
             wifiElement.put("created_at", dateTime.format(Date()))
 

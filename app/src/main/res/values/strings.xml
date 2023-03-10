@@ -8,9 +8,9 @@
     <string name="scan_stop">Stop scanning</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="wifiscan">WifiScan</string>
+    <string name="vehicleName">Name of vehicle (e.g. AVG 355)</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->

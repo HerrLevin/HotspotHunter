@@ -22,6 +22,7 @@ import androidx.preference.PreferenceManager
 
 class WifiScanner(activity: Activity) : BroadcastReceiver() {
 
+    private var vehicleName: String = ""
     private var resultList = ArrayList<ScanResult>()
     var resultText = mutableListOf<String>()
     private lateinit var wifiManager: WifiManager
@@ -107,7 +108,8 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
 
     }
 
-    fun prepareScanning() {
+    fun prepareScanning(vehicleName: String) {
+        this.vehicleName = vehicleName
         if (this.sync) {
             mainHandler.post(object : Runnable {
                 override fun run() {
@@ -151,7 +153,7 @@ class WifiScanner(activity: Activity) : BroadcastReceiver() {
     private fun stopWithoutBreaking() {
         Log.d("WifiScanner", "Stopping scan run")
         val uploader = Uploader(this.activity)
-        uploader.upload(this.resultList, this.latitude, this.longitude)
+        uploader.upload(this.resultList, this.latitude, this.longitude, this.vehicleName)
 
         for (result in this.resultList) {
             Log.d("WIFI", result.BSSID.toString())

@@ -46,7 +46,7 @@ class FirstFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == wifiScanner.requestLocationPermission || requestCode == wifiScanner.requestWifiPermission) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                this.wifiScanner.prepareScanning()
+                this.wifiScanner.prepareScanning(binding.vehicleName.text.toString())
             }
         }
     }
@@ -84,7 +84,7 @@ class FirstFragment : Fragment() {
 
         binding.buttonScan.setOnClickListener {
             if (!this.wifiScanner.isScanning()) {
-                this.wifiScanner.prepareScanning()
+                this.wifiScanner.prepareScanning(binding.vehicleName.text.toString())
                 Snackbar.make(view, "Starting Wifi Scan!", Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show()
             } else {
