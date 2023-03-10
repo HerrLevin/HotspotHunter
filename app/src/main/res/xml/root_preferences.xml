@@ -22,9 +22,15 @@
         app:title="@string/sync_header">
 
         <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title"/>
+            app:key="upload"
+            app:title="@string/upload_title" />
 
+        <SwitchPreferenceCompat
+            android:id="@+id/switchPreferenceCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="sync"
+            app:title="@string/sync_title" />
         <ListPreference
             app:defaultValue="10_000"
             app:dependency="sync"

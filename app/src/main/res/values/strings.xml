@@ -25,6 +25,7 @@
 
     <!-- Sync Preferences -->
     <string name="sync_title">Scan periodically in a given interval</string>
+    <string name="upload_title">Upload results to host</string>
     <string name="sync_interval">Scan Interval</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
